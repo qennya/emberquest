@@ -11,3 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
   flame: ^1.33.0
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true  # optional, but common
+  assets:
+    - assets/images/
