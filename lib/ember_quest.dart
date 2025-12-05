@@ -25,6 +25,10 @@ class EmberQuestGame extends FlameGame
   double cloudSpeed = 0.0;
   double objectSpeed = 0.0;
 
+  Color currentBackgroundColor =
+  const Color.fromARGB(255, 173, 223, 247);
+  late RectangleComponent _bgRect;
+
   @override
   Future<void> onLoad() async {
     //debugMode = true; // Uncomment to see the bounding boxes
@@ -40,6 +44,16 @@ class EmberQuestGame extends FlameGame
     ]);
     camera.viewfinder.anchor = Anchor.topLeft;
 
+    // Create a background rectangle that fills the screen
+    _bgRect = RectangleComponent(
+      position: Vector2.zero(),
+      size: size, // initial game size
+      paint: Paint()..color = currentBackgroundColor,
+      priority: -10, // make sure it renders behind everything else
+    );
+    world.add(_bgRect);
+
+
     initializeGame(loadHud: true);
   }
 
@@ -53,7 +67,7 @@ class EmberQuestGame extends FlameGame
 
   @override
   Color backgroundColor() {
-    return const Color.fromARGB(255, 173, 223, 247);
+    return currentBackgroundColor;
   }
 
   void loadGameSegments(int segmentIndex, double xPositionOffset) {
@@ -169,6 +183,17 @@ class EmberQuestGame extends FlameGame
     // 5. Restore Ember’s progress
     starsCollected = savedStars;
     health = savedHealth;
+
+    // After restoring stars & health
+    if (currentBackgroundColor ==
+        const Color.fromARGB(255, 173, 223, 247)) {
+      currentBackgroundColor = const Color.fromARGB(255, 150, 80, 200);
+    } else {
+      currentBackgroundColor = const Color.fromARGB(255, 173, 223, 247);
+    }
+
+    _bgRect.paint.color = currentBackgroundColor;
+
   }
 
 
