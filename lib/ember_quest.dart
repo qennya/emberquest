@@ -186,7 +186,7 @@ class EmberQuestGame extends FlameGame
     // 5. Restore Ember’s progress
     starsCollected = savedStars;
     health = savedHealth;
-    _ember.moveSpeed = (_ember.moveSpeed + 200).clamp(200, 1000);
+    _ember.moveSpeed = (_ember.moveSpeed + 100).clamp(200, 1000);
 
     overlays.add('SpeedBoost');
     Future.delayed(const Duration(seconds: 2), () {
@@ -197,7 +197,7 @@ class EmberQuestGame extends FlameGame
         const Color.fromARGB(255, 173, 223, 247)) {
       currentBackgroundColor = const Color.fromARGB(255, 150, 80, 200);
     } else {
-      currentBackgroundColor = const Color.fromARGB(255, 173, 223, 247);
+      currentBackgroundColor = const Color.fromARGB(255, 150, 3, 240);
     }
 
     _bgRect.paint.color = currentBackgroundColor;

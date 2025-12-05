@@ -13,7 +13,7 @@ class DoorBlock extends SpriteComponent
     required this.gridPosition,
     required this.xOffset,
   }) : super(
-    size: Vector2.all(128),
+    size: Vector2.all(64),
     anchor: Anchor.bottomLeft,
   );
 
