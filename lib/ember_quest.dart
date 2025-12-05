@@ -10,6 +10,7 @@ import 'objects/ground_block.dart';
 import 'objects/platform_block.dart';
 import 'objects/star.dart';
 import 'overlays/hud.dart';
+import 'objects/door_block.dart';
 
 class EmberQuestGame extends FlameGame
     with HasCollisionDetection, HasKeyboardHandlerComponents {
@@ -34,6 +35,7 @@ class EmberQuestGame extends FlameGame
       'heart_half.png',
       'heart.png',
       'star.png',
+      'door.png',
       'water_enemy.png',
     ]);
     camera.viewfinder.anchor = Anchor.topLeft;
@@ -73,33 +75,101 @@ class EmberQuestGame extends FlameGame
           gridPosition: block.gridPosition,
           xOffset: xPositionOffset,
         ),
+        const (DoorBlock) => DoorBlock(
+          gridPosition: block.gridPosition,
+          xOffset: xPositionOffset,
+        ),
         _ => throw UnimplementedError(),
       };
       world.add(component);
     }
   }
 
+
   void initializeGame({required bool loadHud}) {
     // Assume that size.x < 3200
     final segmentsToLoad = (size.x / 640).ceil();
+    final clampedSegmentsToLoad =
     segmentsToLoad.clamp(0, segments.length);
 
-    for (var i = 0; i <= segmentsToLoad; i++) {
-      loadGameSegments(i, (640 * i).toDouble());
+    for (var i = 0; i <= clampedSegmentsToLoad; i++) {
+      final xOffset = (640 * i).toDouble();
+
+      // Loop through the segments list in order.
+      // Since worldChangeSegment is last in the list,
+      // the door will appear at the end before the cycle repeats.
+      final index = i % segments.length;
+      loadGameSegments(index, xOffset);
     }
 
     _ember = EmberPlayer(
       position: Vector2(128, canvasSize.y - 128),
     );
     world.add(_ember);
+
     if (loadHud) {
       camera.viewport.add(Hud());
     }
   }
 
+
+
   void reset() {
+    // 1. Clear score and health
     starsCollected = 0;
     health = 3;
-    initializeGame(loadHud: false);
+
+    // 2. Remove all world entities (including the old Ember)
+    // Convert toList() first so we don't modify while iterating
+    for (final c in world.children.toList()) {
+      c.removeFromParent();
+    }
+
+    // 3. Clear HUD / viewport components (health/hearts, etc.)
+    for (final c in camera.viewport.children.toList()) {
+      c.removeFromParent();
+    }
+
+    // 4. Remove GameOver overlay if it is active
+    if (overlays.isActive('GameOver')) {
+      overlays.remove('GameOver');
+    }
+
+    // 5. Re-initialize the game (new Ember, new segments, new HUD)
+    initializeGame(loadHud: true);
   }
+
+
+  void changeWorld() {
+    // 1. Save Ember’s current progress
+    final savedStars = starsCollected;
+    final savedHealth = health;
+
+    // 2. Remove current world blocks/enemies/collectibles/doors
+    world.children.whereType<GroundBlock>().forEach((c) => c.removeFromParent());
+    world.children.whereType<PlatformBlock>().forEach((c) => c.removeFromParent());
+    world.children.whereType<Star>().forEach((c) => c.removeFromParent());
+    world.children.whereType<WaterEnemy>().forEach((c) => c.removeFromParent());
+    world.children.whereType<DoorBlock>().forEach((c) => c.removeFromParent());
+
+    // 3. Reset Ember’s position to the start (keep the same Ember instance)
+    _ember.position = Vector2(128, canvasSize.y - 128);
+
+    // 4. Reload segments in the same order as initializeGame
+    final segmentsToLoad = (size.x / 640).ceil();
+    final clampedSegmentsToLoad =
+    segmentsToLoad.clamp(0, segments.length);
+
+    for (var i = 0; i <= clampedSegmentsToLoad; i++) {
+      final xOffset = (640 * i).toDouble();
+      final index = i % segments.length;
+      loadGameSegments(index, xOffset);
+    }
+
+    // 5. Restore Ember’s progress
+    starsCollected = savedStars;
+    health = savedHealth;
+  }
+
+
 }

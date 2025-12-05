@@ -4,6 +4,7 @@ import '../actors/water_enemy.dart';
 import '../objects/ground_block.dart';
 import '../objects/platform_block.dart';
 import '../objects/star.dart';
+import '../objects/door_block.dart';
 
 class Block {
   // gridPosition position is always segment based X,Y.
@@ -20,6 +21,7 @@ final segments = [
   segment2,
   segment3,
   segment4,
+  worldChangeSegment, // ⬅ last in the cycle
 ];
 
 final segment0 = [
@@ -116,3 +118,18 @@ final segment4 = [
   Block(Vector2(9, 1), WaterEnemy),
   Block(Vector2(9, 3), PlatformBlock),
 ];
+final worldChangeSegment = [
+  Block(Vector2(0, 0), GroundBlock),
+  Block(Vector2(1, 0), GroundBlock),
+  Block(Vector2(2, 0), GroundBlock),
+  Block(Vector2(3, 0), GroundBlock),
+  Block(Vector2(4, 0), GroundBlock),
+  Block(Vector2(5, 0), GroundBlock),
+  Block(Vector2(6, 0), GroundBlock),
+  Block(Vector2(7, 0), GroundBlock),
+  Block(Vector2(8, 0), GroundBlock),
+  Block(Vector2(9, 0), GroundBlock),
+  // Door at the very end of the segment (x = 9)
+  Block(Vector2(9, 1), DoorBlock),
+];
+
