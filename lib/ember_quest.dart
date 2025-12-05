@@ -2,6 +2,8 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+
 
 import 'actors/ember.dart';
 import 'actors/water_enemy.dart';
@@ -186,7 +188,9 @@ class EmberQuestGame extends FlameGame
     health = savedHealth;
     _ember.moveSpeed = (_ember.moveSpeed + 200).clamp(200, 1000);
 
-
+    overlays.add('SpeedBoost');
+    Future.delayed(const Duration(seconds: 2), () {
+      overlays.remove('SpeedBoost');});
 
     // After restoring stars & health
     if (currentBackgroundColor ==
@@ -199,6 +203,5 @@ class EmberQuestGame extends FlameGame
     _bgRect.paint.color = currentBackgroundColor;
 
   }
-
 
 }
