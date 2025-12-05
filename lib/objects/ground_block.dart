@@ -21,8 +21,9 @@ class GroundBlock extends SpriteComponent
   }) : super(size: Vector2.all(64), anchor: Anchor.bottomLeft);
 
   @override
+  @override
   Future<void> onLoad() async {
-    final groundImage = game.images.fromCache('ground.png');
+    final groundImage = game.images.fromCache(game.currentGroundSprite);
     sprite = Sprite(groundImage);
     position = Vector2(
       (gridPosition.x * size.x) + xOffset,
@@ -34,6 +35,7 @@ class GroundBlock extends SpriteComponent
       game.lastBlockXPosition = position.x + size.x;
     }
   }
+
 
   @override
   void update(double dt) {

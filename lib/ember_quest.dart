@@ -31,6 +31,8 @@ class EmberQuestGame extends FlameGame
   const Color.fromARGB(255, 173, 223, 247);
   late RectangleComponent _bgRect;
 
+  String currentGroundSprite = 'ground.png';
+
   @override
   Future<void> onLoad() async {
     //debugMode = true; // Uncomment to see the bounding boxes
@@ -38,6 +40,7 @@ class EmberQuestGame extends FlameGame
       'block.png',
       'ember.png',
       'ground.png',
+      'ground_alt.png',
       'heart_half.png',
       'heart.png',
       'star.png',
@@ -168,6 +171,12 @@ class EmberQuestGame extends FlameGame
     world.children.whereType<WaterEnemy>().forEach((c) => c.removeFromParent());
     world.children.whereType<DoorBlock>().forEach((c) => c.removeFromParent());
 
+    if (currentGroundSprite == 'ground.png') {
+      currentGroundSprite = 'ground_alt.png';
+    } else {
+      currentGroundSprite = 'ground.png';
+    }
+
     // 3. Reset Ember’s position to the start (keep the same Ember instance)
     _ember.position = Vector2(128, canvasSize.y - 128);
 
@@ -193,11 +202,10 @@ class EmberQuestGame extends FlameGame
       overlays.remove('SpeedBoost');});
 
     // After restoring stars & health
-    if (currentBackgroundColor ==
-        const Color.fromARGB(255, 173, 223, 247)) {
+    if (currentBackgroundColor == const Color.fromARGB(255, 173, 223, 247)) {
       currentBackgroundColor = const Color.fromARGB(255, 150, 80, 200);
     } else {
-      currentBackgroundColor = const Color.fromARGB(255, 150, 3, 240);
+      currentBackgroundColor = const Color.fromARGB(255, 173, 233, 247);
     }
 
     _bgRect.paint.color = currentBackgroundColor;
