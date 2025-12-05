@@ -21,7 +21,7 @@ class EmberPlayer extends SpriteAnimationComponent
   final Vector2 fromAbove = Vector2(0, -1);
   final double gravity = 15;
   final double jumpSpeed = 600;
-  final double moveSpeed = 200;
+  double moveSpeed = 200;
   final double terminalVelocity = 150;
   int horizontalDirection = 0;
 

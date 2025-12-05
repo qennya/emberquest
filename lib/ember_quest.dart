@@ -180,9 +180,13 @@ class EmberQuestGame extends FlameGame
       loadGameSegments(index, xOffset);
     }
 
+
     // 5. Restore Ember’s progress
     starsCollected = savedStars;
     health = savedHealth;
+    _ember.moveSpeed = (_ember.moveSpeed + 200).clamp(200, 1000);
+
+
 
     // After restoring stars & health
     if (currentBackgroundColor ==
